@@ -184,6 +184,38 @@ class Board(object):
                 pygame.display.set_caption('黑子，赢！')
 
 
+class Player():
+    def __init__(self,board,user_type,piece_type) -> None:
+        self.screen = board.screen
+        self.board = board
+        self.user_type = user_type
+        self.piece_type = piece_type
+        temp_x = board.Board_margins[0]*2 + board.Board_size[1] +20
+        temp_y = board.Board_margins[1]
+        if self.piece_type=='white':
+            self.piece_img = self.board.White_piece
+            self.active_piece_img = pygame.transform.rotozoom(self.piece_img,0,1.03)
+            self.position = [temp_x+10,temp_y+12]
+        elif self.piece_type=='black':
+            self.piece_img = self.board.Black_piece
+            self.active_piece_img = pygame.transform.rotozoom(self.piece_img,0,1.03)
+            self.position = [temp_x+10,temp_y+72]
+
+    def show_player_info(self):
+
+        if self.piece_type==self.board.Current_palyer:
+            self.screen.blit(self.piece_img,self.position)
+            my_font = pygame.font.SysFont("times", 28)
+            font_color = (0,0,0)
+            tmp_text = my_font.render(self.user_type, True,font_color,(255,255,255))
+            self.screen.blit(tmp_text,(self.position[0]+50,self.position[1]+5))
+        else:
+            self.screen.blit(self.piece_img,self.position)
+            my_font = pygame.font.SysFont("times", 25)
+            font_color = (180,180,180)
+            tmp_text = my_font.render(self.user_type, True,font_color,(255,255,255))
+            self.screen.blit(tmp_text,(self.position[0]+50,self.position[1]+5))
+
 class info_area():
     def __init__(self,screen,board):
         self.screen = screen
@@ -200,7 +232,7 @@ class info_area():
     def show_info_boundary(self):
         info_rect = (self.position[0],self.position[1],self.width,self.height)
         pygame.draw.rect(self.screen,[0,0,0],info_rect,2)
-        self.show_piece_cat()
+        # self.show_piece_cat()
 
     def show_piece_cat(self):
         my_font = pygame.font.SysFont("microsoft Yahei", 25)

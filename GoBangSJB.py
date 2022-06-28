@@ -2,7 +2,7 @@
 import sys
 
 import pygame
-from BoardSJB import Board,info_area
+from BoardSJB import Board,Player,info_area
 
 # initialize pygame windows
 pygame.init()
@@ -26,6 +26,10 @@ screen.fill(screen_back_color)
 
 Temp_board = Board(screen)
 Temp_board.draw_board()
+
+player1 = Player(Temp_board,'Mouse','white')
+player2 = Player(Temp_board,'CPU','black')
+
 this_info = info_area(screen,Temp_board)
 
 
@@ -53,6 +57,9 @@ while True:
         Temp_board.draw_board()
         Temp_board.draw_all_pieces()
         Temp_board.player_thinking(pos)
+
+        player1.show_player_info()
+        player2.show_player_info()
 
         this_info.show_info_boundary()
 
