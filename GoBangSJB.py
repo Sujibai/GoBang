@@ -3,6 +3,7 @@ import sys
 
 import pygame
 from BoardSJB import Board,Player,info_area
+from MinMaxAI import MinMaxGoBang
 
 # initialize pygame windows
 pygame.init()
@@ -32,6 +33,8 @@ player2 = Player(Temp_board,'CPU','black')
 
 this_info = info_area(screen,Temp_board)
 
+this_ai = MinMaxGoBang(player1)
+
 
 
 
@@ -50,6 +53,8 @@ while True:
             if Temp_board.game_statu=='active':
                 Temp_board.add_piece(event.pos)
             Temp_board.board_trigger()
+            this_pos_index = Temp_board.get_pos_index(event.pos)
+            this_ai.evaluate(this_pos_index)
 
     if Temp_board.game_statu=='active':
         screen.fill(screen_back_color)
@@ -62,6 +67,8 @@ while True:
         player2.show_player_info()
 
         this_info.show_info_boundary()
+
+        
 
     pygame.display.update()
 

@@ -184,6 +184,12 @@ class Board(object):
                 pygame.display.set_caption('黑子，赢！')
 
 
+class Piece():
+    def __init__(self,board,piece_type,piece_pos) -> None:
+        self.board = board
+        self.piece_type = piece_type
+        self.piece_pos = piece_pos
+
 class Player():
     def __init__(self,board,user_type,piece_type) -> None:
         self.screen = board.screen
@@ -202,7 +208,6 @@ class Player():
             self.position = [temp_x+10,temp_y+72]
 
     def show_player_info(self):
-
         if self.piece_type==self.board.Current_palyer:
             self.screen.blit(self.piece_img,self.position)
             my_font = pygame.font.SysFont("times", 28)
