@@ -9,7 +9,7 @@ class Board(object):
     Board_rows = 20
     Board_cols = 20
     round_history=[]
-    Board_status=np.zeros([Board_rows,Board_cols])
+    Board_status=np.zeros([Board_rows,Board_cols],dtype='int')
     Current_palyer='white'
     game_statu = 'active'
     
@@ -121,10 +121,10 @@ class Board(object):
         (x,y) = pos_index
         if direction == 'row':
             this_line = self.Board_status[:,y]
-            this_index = y
+            this_index = x
         elif direction == 'col':
             this_line = self.Board_status[x,:]
-            this_index = x
+            this_index = y
         elif direction == 'diag':
             this_line = np.diag(self.Board_status,y-x)
             this_index = min(x,y)
@@ -133,11 +133,27 @@ class Board(object):
             this_index = min(x,self.Board_rows-y-1)
         return np.array(this_line),this_index
 
-    def get_neighbor(self,pos_index,direction,hop_range):
-        line,index = self.get_line(self,pos_index,direction)
-        left_end = min(0,index-hop_range)
-        right_end = min(len(line),index+hop_range)
-        return line[left_end,right_end]
+    def get_neighbor_line(self,pos_index,direction,hop_range):
+        line,index = self.get_line(pos_index,direction)
+        left_end = max(0,index-hop_range)
+        right_end = min(len(line),index+hop_range+1)
+        return line[left_end:right_end]
+
+    def get_lines(self,pos_index):
+        lines = []
+        lines.append(self.get_line(pos_index,'row')[0])
+        lines.append(self.get_line(pos_index,'col')[0])
+        lines.append(self.get_line(pos_index,'diag')[0])
+        lines.append(self.get_line(pos_index,'offdiag')[0])
+        return lines
+
+    def get_neighbor_lines(self,pos_index,hop_range):
+        lines = []
+        lines.append(self.get_neighbor_line(pos_index,'row',hop_range))
+        lines.append(self.get_neighbor_line(pos_index,'col',hop_range))
+        lines.append(self.get_neighbor_line(pos_index,'diag',hop_range))
+        lines.append(self.get_neighbor_line(pos_index,'offdiag',hop_range))
+        return lines
 
     def get_pos_index(self,pos):
         x_index = (pos[0]-self.Board_position[0]+self.Board_blocksize/2)//self.Board_blocksize

@@ -7,94 +7,100 @@ class MinMaxGoBang():
         self.board = player.board
         self.def_consts()
 
-    def get_line(self,pos_index,direction):
-        hop_range=4
-        if direction=='col':
-            left_end = max(0,pos_index[1]-hop_range)
-            right_end = min(self.board.Board_cols,pos_index[1]+hop_range+1)
-            this_line = self.board.Board_status[pos_index[0],left_end:right_end]
-            return np.array(this_line)
-        elif direction=='row':
-            left_end = max(0,pos_index[0]-hop_range)
-            right_end = min(self.board.Board_cols,pos_index[0]+hop_range+1)
-            this_line = self.board.Board_status[left_end:right_end,pos_index[1]]
-            return np.array(this_line)
-        elif direction=='diag':
-            left_end = max(-hop_range,-pos_index[0],-pos_index[1])
-            right_end = min(hop_range+1,self.board.Board_rows-pos_index[0],self.board.Board_cols-pos_index[1])
-            this_line = [self.board.Board_status[pos_index[0]+ind,pos_index[1]+ind] for ind in range(left_end,right_end,1)]
-            return np.array(this_line)
-        elif direction=='offdiag':
-            left_end = max(-hop_range,-pos_index[0],pos_index[1]-self.board.Board_rows+1)
-            right_end = min(hop_range+1,self.board.Board_cols-pos_index[0],pos_index[1]+1)
-            this_line = [self.board.Board_status[pos_index[0]+ind,pos_index[1]-ind] for ind in range(left_end,right_end,1)]
-            return np.array(this_line)
-        else:
-            return []
+    # def get_line(self,pos_index,direction):
+    #     hop_range=4
+    #     if direction=='col':
+    #         left_end = max(0,pos_index[1]-hop_range)
+    #         right_end = min(self.board.Board_cols,pos_index[1]+hop_range+1)
+    #         this_line = self.board.Board_status[pos_index[0],left_end:right_end]
+    #         return np.array(this_line)
+    #     elif direction=='row':
+    #         left_end = max(0,pos_index[0]-hop_range)
+    #         right_end = min(self.board.Board_cols,pos_index[0]+hop_range+1)
+    #         this_line = self.board.Board_status[left_end:right_end,pos_index[1]]
+    #         return np.array(this_line)
+    #     elif direction=='diag':
+    #         left_end = max(-hop_range,-pos_index[0],-pos_index[1])
+    #         right_end = min(hop_range+1,self.board.Board_rows-pos_index[0],self.board.Board_cols-pos_index[1])
+    #         this_line = [self.board.Board_status[pos_index[0]+ind,pos_index[1]+ind] for ind in range(left_end,right_end,1)]
+    #         return np.array(this_line)
+    #     elif direction=='offdiag':
+    #         left_end = max(-hop_range,-pos_index[0],pos_index[1]-self.board.Board_rows+1)
+    #         right_end = min(hop_range+1,self.board.Board_cols-pos_index[0],pos_index[1]+1)
+    #         this_line = [self.board.Board_status[pos_index[0]+ind,pos_index[1]-ind] for ind in range(left_end,right_end,1)]
+    #         return np.array(this_line)
+    #     else:
+    #         return []
 
-    def get_neighb_lines(self,pos_index):
-        lines = []
-        lines.append(self.get_line(pos_index,'row'))
-        lines.append(self.get_line(pos_index,'col'))
-        lines.append(self.get_line(pos_index,'diag'))
-        lines.append(self.get_line(pos_index,'offdiag'))
-        return lines
+    # def get_neighb_lines(self,pos_index):
+    #     lines = []
+    #     lines.append(self.get_line(pos_index,'row'))
+    #     lines.append(self.get_line(pos_index,'col'))
+    #     lines.append(self.get_line(pos_index,'diag'))
+    #     lines.append(self.get_line(pos_index,'offdiag'))
+    #     return lines
 
-    def get_lines(self,pos_index):
-        lines = []
-        lines.append(np.array(self.board.Board_status[:,pos_index[1]]))
-        lines.append(np.array(self.board.Board_status[pos_index[0],:]))
-        lines.append(np.array(np.diag(self.board.Board_status,pos_index[1]-pos_index[0])))
-        lines.append(np.array(np.diag(np.fliplr(self.board.Board_status),self.board.Board_cols-pos_index[1]-pos_index[0]-1)))
-        return lines
+    # def get_lines(self,pos_index):
+    #     lines = []
+    #     lines.append(np.array(self.board.Board_status[:,pos_index[1]]))
+    #     lines.append(np.array(self.board.Board_status[pos_index[0],:]))
+    #     lines.append(np.array(np.diag(self.board.Board_status,pos_index[1]-pos_index[0])))
+    #     lines.append(np.array(np.diag(np.fliplr(self.board.Board_status),self.board.Board_cols-pos_index[1]-pos_index[0]-1)))
+    #     return lines
 
     def def_consts(self):
         self.LIVE_FIVE={'type':'live five','type_index':0,'modes':[[1,1,1,1,1],[1,1,1,1,1]],'score':10000}
         self.LIVE_FOUR={'type':'live four','type_index':1,'modes':[[0,1,1,1,1,0]],'score':10000}
-        self.SLEEP_FOUR={'type':'sleep four','type_index':2,'modes':[[0,1,1,1,1,-1],[1,0,1,1,1,-1],[1,1,0,1,1,-1]],'score':10000}
-        self.LIVE_THREE={'type':'live three','type_index':3,'modes':[[0,1,1,1,0,0]],'score':10000}
-        self.SLEEP_THREE={'type':'sleep three','type_index':4,'score':10000}
-        self.LIVE_TWO={'type':'live two','type_index':5,'score':10000}
-        self.SLEEP_TWO={'type':'sleep two','type_index':6,'score':10000}
-        self.LIVE_ONE={'type':'live one','type_index':7,'score':10000}
-        self.SLEEP_ONE={'type':'sleep one','type_index':8,'score':10000}
+        self.SLEEP_FOUR={'type':'sleep four','type_index':2,'modes':[[0,1,1,1,1,-1],[1,0,1,1,1],[1,1,0,1,1]],'score':10000}
+        self.LIVE_THREE={'type':'live three','type_index':3,'modes':[[0,1,1,1,0,0],[0,1,1,0,1,0]],'score':10000}
+        self.SLEEP_THREE={'type':'sleep three','type_index':4,'modes':[[0,1,1,1,-1],[0,1,0,1,1,-1],[0,1,1,0,1,-1],[-1,0,1,1,1,0,-1]],'score':10000}
+        self.LIVE_TWO={'type':'live two','type_index':5,'modes':[[0,1,1,0,0,0,0],[0,1,0,1,0,0,0],[0,1,0,0,1,0,0],[0,1,0,0,0,1,0],[0,0,1,1,0,0,0],[0,0,1,0,1,0,0]],'score':10000}
+        self.SLEEP_TWO={'type':'sleep two','type_index':6,'modes':[[-1,1,1,0,0,0],[1,1,0,0,0,-1],[-1,1,0,1,0,0],[1,0,1,0,0,-1],[-1,1,0,0,1,0],[1,0,0,1,0,-1],[-1,1,0,0,0,1],[-1,0,1,1,0,0],[0,1,1,0,0,-1],[-1,0,1,0,1,0]],'score':10000}
+        self.LIVE_ONE={'type':'live one','type_index':7,'modes':[[0,1,0,0,0,0,0],[0,0,1,0,0,0,0],[0,0,0,1,0,0,0]],'score':10000}
+        self.SLEEP_ONE={'type':'sleep one','type_index':8,'modes':[[-1,1,0,0,0,0],[-1,0,1,0,0,0],[-1,0,0,1,0,0]],'score':10000}
         self.DEAD_LINE={'type':'dead line','type_index':9,'score':10000}
         self.TYPE_HASH = [self.LIVE_FIVE,self.LIVE_FOUR,self.SLEEP_FOUR,self.LIVE_THREE,self.SLEEP_THREE,self.LIVE_TWO,self.SLEEP_TWO,self.LIVE_ONE,self.SLEEP_ONE,self.DEAD_LINE]
         pass
 
     def has_this_type(self,line,line_type):
+        # print('--------check modes %s----------'%line_type['type'])
+        # print(line)
         if ('modes' not in line_type):
+            # print('no modes')
             return False
-        for mode in line_type['modes']:
+        for mode in line_type['modes']: 
             if len(line)<len(mode):
-                return False
+                # print('too short')
+                pass
             else:
-                print('--------------blocks-------------')
+                neg_mode = [-num for num in mode]
+                rev_mode = list(reversed(mode))
+                neg_rev_mode = list(reversed(neg_mode))
                 for ind in range(len(line)-len(mode)+1):
                     block = line[ind:ind+len(mode)]
-                    print(block)
                     black_right = (block == mode).all()
-                    black_left = (block == mode.reverse()).all()
+                    black_left = (block == rev_mode).all()
                     black_check = black_right or black_left
-                    neg_mode = [-num for num in mode]
                     white_right = (block == neg_mode).all()
-                    white_left = (block == neg_mode.reverse()).all()
+                    white_left = (block == neg_rev_mode).all()
                     white_check= white_right or white_left
-
                     if black_check or white_check:
-                        print(line_type['type'])
                         return True
-                return False
+        return False
 
     def get_line_type(self,line):
         line_types=[]
         for line_type in self.TYPE_HASH:
-            if self.has_this_type(line,line_type):
+            has_type = self.has_this_type(line,line_type)
+            # print(has_type)
+            if has_type:
                 line_types.append(line_type['type'])
-                print(line_types)
+        print(line_types)
 
     def evaluate(self,pos_index):
-        lines = self.get_lines(pos_index)
+        # line,_ = self.board.get_line(pos_index,'row')
+        # self.get_line_type(line)
+        lines = self.board.get_lines(pos_index)
         # print(lines)
         for line in lines:
             print(line)
