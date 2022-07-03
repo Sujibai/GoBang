@@ -53,8 +53,13 @@ while True:
             if Temp_board.game_statu=='active':
                 Temp_board.add_piece(event.pos)
             Temp_board.board_trigger()
+
             this_pos_index = Temp_board.get_pos_index(event.pos)
-            this_ai.evaluate(this_pos_index)
+            line,index = Temp_board.get_line(this_pos_index,'offdiag')
+            print(line,index)
+            
+            # print('--------------------------')
+            # this_ai.evaluate(this_pos_index)
 
     if Temp_board.game_statu=='active':
         screen.fill(screen_back_color)

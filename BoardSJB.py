@@ -117,6 +117,28 @@ class Board(object):
                 return True
         return False
 
+    def get_line(self,pos_index,direction):
+        (x,y) = pos_index
+        if direction == 'row':
+            this_line = self.Board_status[:,y]
+            this_index = y
+        elif direction == 'col':
+            this_line = self.Board_status[x,:]
+            this_index = x
+        elif direction == 'diag':
+            this_line = np.diag(self.Board_status,y-x)
+            this_index = min(x,y)
+        elif direction == 'offdiag':
+            this_line = np.diag(np.fliplr(self.Board_status),self.Board_cols-x-y-1)
+            this_index = min(x,self.Board_rows-y-1)
+        return np.array(this_line),this_index
+
+    def get_neighbor(self,pos_index,direction,hop_range):
+        line,index = self.get_line(self,pos_index,direction)
+        left_end = min(0,index-hop_range)
+        right_end = min(len(line),index+hop_range)
+        return line[left_end,right_end]
+
     def get_pos_index(self,pos):
         x_index = (pos[0]-self.Board_position[0]+self.Board_blocksize/2)//self.Board_blocksize
         y_index = (pos[1]-self.Board_position[1]+self.Board_blocksize/2)//self.Board_blocksize
